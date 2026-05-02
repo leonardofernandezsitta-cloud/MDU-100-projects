@@ -1,0 +1,33 @@
+Mathematical Thinking Exercise for Project #4
+
+Before we start Project #5, let me give you a simple math problem related to what you just learned about environment variables.
+Problem: Counting Possible Environment Variable Names
+
+Environment variable names in Linux can contain:
+
+    Uppercase letters (A-Z): 26 possibilities
+
+    Lowercase letters (a-z): 26 possibilities
+
+    Underscore (_): 1 possibility
+
+They CANNOT start with a number.
+
+If a variable name has exactly 2 characters:
+
+Step 1: First character can be A-Z, a-z, or _ → How many possibilities?
+Step 2: Second character can be A-Z, a-z, _, or 0-9 (digits) → How many possibilities?
+Step 3: Multiply Step 1 × Step 2 = Total possible 2-character variable names.
+
+Alright, let's go! 
+
+Step 1: First character can be A-Z, a-z, or _ → How many possibilities? 53 possibilities 
+
+Step 2: Second character can be A-Z, a-z, _, or 0-9 (digits) → How many possibilities? 63 possibilities
+
+Step 3: Multiply Step 1 × Step 2 = Total possible 2-character variable names.
+
+	63*53 = (60*50) + (3*60) + (3*50) + (3*3) = 3000 + 180 + 150 + 9 = 3000 + (180 + 150) + 9 = 3000 + 330 + 9 = 3339  
+	
+Answer: There are 3339 possible 2-character variable names.
+
