@@ -1,0 +1,76 @@
+# 1. See all processes
+ps aux | head -20
+
+
+noobian1    7047  0.2  2.1 1541844 167956 ?      Sl   Apr27   7:07 /usr/bin/gnome-text-editor
+	
+	(I assume this is nano being used)
+
+noobian1    4267  0.8  3.9 3016984 310952 ?      Sl   Apr27  22:23 /snap/firefox/7967/usr/lib/firefox/firefox -contentproc -isForBrowse
+
+	(I see this process from firefox has one of the highst usages od %CPU and %MEM)
+
+root           5  0.0  0.0      0     0 ?        I<   Apr27   0:00 [kworker/R-sync_wq]
+
+	(I see a lot of [kworker] and I do believe that is like system required functions, like, drivers and system fuctionality)
+
+root          16  0.0  0.0      0     0 ?        S    Apr27   0:00 [rcu_exp_par_gp_kthread_worker/0]
+
+	(I have no clue what this process is and does XD)
+
+...etc. There are a lot of processes, some are root, some are noobian(user), some are mysql(I guess that is a database), etc. 
+
+
+# 2. See your shell's process ID
+echo $$
+
+noobian1@Ubuntu24:~/MDU_MY_DEEPSEEK_UNIVERSITY/mdu_project_3$ echo $$
+22956
+
+	(I assume that is the current process, meaning the terminal I am using PID $$ on)
+
+# 3. See parent process ID
+echo $PPID
+
+noobian1@Ubuntu24:~/MDU_MY_DEEPSEEK_UNIVERSITY/mdu_project_3$ echo $PPID
+3446
+
+	(The parent process ID or $PPID is supposed to be like the process noobian started from which all ather processes are born?)
+
+# 4. See open network connections
+ss -tulpn 2>/dev/null | head -10
+
+noobian1@Ubuntu24:~/MDU_MY_DEEPSEEK_UNIVERSITY/mdu_project_3$ ss -tulpn 2>/dev/null
+Netid      State       Recv-Q      Send-Q                              Local Address:Port            Peer Address:Port     Process     
+udp        UNCONN      0           0                                      127.0.0.54:53                   0.0.0.0:*                    
+udp        UNCONN      0           0                                   127.0.0.53%lo:53                   0.0.0.0:*                    
+udp        UNCONN      0           0                                         0.0.0.0:41809                0.0.0.0:*                    
+udp        UNCONN      0           0                                         0.0.0.0:5353                 0.0.0.0:*                    
+udp        UNCONN      0           0                [fe80::7e9e:ee6f:540b:22f3]%wlo1:546                     [::]:*                    
+udp        UNCONN      0           0                                            [::]:5353                    [::]:*                    
+udp        UNCONN      0           0                                            [::]:58856                   [::]:*                    
+tcp        LISTEN      0           4096                                    127.0.0.1:631                  0.0.0.0:*                    
+tcp        LISTEN      0           4096                                127.0.0.53%lo:53                   0.0.0.0:*                    
+tcp        LISTEN      0           70                                      127.0.0.1:33060                0.0.0.0:*                    
+tcp        LISTEN      0           4096                                   127.0.0.54:53                   0.0.0.0:*                    
+tcp        LISTEN      0           151                                     127.0.0.1:3306                 0.0.0.0:*                    
+tcp        LISTEN      0           4096                                        [::1]:631                     [::]:*                    
+
+	(I see a bunch of IP addresses, some are tcp and some are udp but I really don't understand)
+
+# 5. See who logged in
+last | head -10
+
+noobian1@Ubuntu24:~/MDU_MY_DEEPSEEK_UNIVERSITY/mdu_project_3$ last | head -10
+noobian1 tty2         tty2             Mon Apr 27 15:41   still logged in
+noobian1 seat0        login screen     Mon Apr 27 15:41   still logged in
+reboot   system boot  6.17.0-22-generi Mon Apr 27 15:41   still running
+noobian1 tty2         tty2             Mon Apr 13 22:20 - down  (13+17:20)
+noobian1 seat0        login screen     Mon Apr 13 22:20 - down  (13+17:20)
+reboot   system boot  6.17.0-19-generi Mon Apr 13 22:19 - 15:40 (13+17:21)
+noobian1 tty2         tty2             Sat Mar 21 09:29 - crash (23+12:50)
+noobian1 seat0        login screen     Sat Mar 21 09:29 - crash (23+12:50)
+reboot   system boot  6.17.0-19-generi Sat Mar 21 09:29 - 15:40 (37+06:11)
+noobian1 tty2         tty2             Thu Mar 19 01:22 - crash (2+08:06)
+
+	(I see I am still logged in to some processes, some have crashed, some are still running, but logged in into what?)

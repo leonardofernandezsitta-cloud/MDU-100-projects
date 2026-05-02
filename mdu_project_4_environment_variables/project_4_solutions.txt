@@ -1,0 +1,163 @@
+Step 1: Just tell me: What is the value of SHELL? (Look for a line starting with SHELL=):
+
+	SHELL=/bin/bash
+
+Step 2: See one specific variable: run "echo $HOME", what do you see?
+
+	/home/noobian1
+
+Step 3: Create a shell variable (not exported), what do you see?
+
+	noobian1@Ubuntu24:~/MDU_MY_DEEPSEEK_UNIVERSITY/mdu_project_4$ color=blue
+	noobian1@Ubuntu24:~/MDU_MY_DEEPSEEK_UNIVERSITY/mdu_project_4$ echo $color
+	blue
+
+Step 4: Verify Python cannot see it (run: python3 -c "import os; print(os.environ.get('my_color', 'NOT FOUND'))"), what do you see?
+
+	noobian1@Ubuntu24:~/MDU_MY_DEEPSEEK_UNIVERSITY/mdu_project_4$ python3
+	Python 3.12.3 (main, Mar 23 2026, 19:04:32) [GCC 13.3.0] on linux
+	Type "help", "copyright", "credits" or "license" for more information.
+	>>> print(color)
+	Traceback (most recent call last):
+	  File "<stdin>", line 1, in <module>
+	NameError: name 'color' is not defined
+	>>> python3 -c "import os; print(os.environ.get('my_color', 'NOT FOUND'))"
+	  File "<stdin>", line 1
+	    python3 -c "import os; print(os.environ.get('my_color', 'NOT FOUND'))"
+	               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+	SyntaxError: invalid syntax
+	>>> exit()
+	noobian1@Ubuntu24:~/MDU_MY_DEEPSEEK_UNIVERSITY/mdu_project_4$ python3 -c "import os; print(os.environ.get('my_color', 'NOT FOUND'))"
+	NOT FOUND
+	noobian1@Ubuntu24:~/MDU_MY_DEEPSEEK_UNIVERSITY/mdu_project_4$ python3 -c "import os; print(os.environ.get('color', 'NOT FOUND'))"
+	NOT FOUND
+	noobian1@Ubuntu24:~/MDU_MY_DEEPSEEK_UNIVERSITY/mdu_project_4$ 
+
+Step 5: Export the variable: after runnning commands, what do you see?
+
+	noobian1@Ubuntu24:~/MDU_MY_DEEPSEEK_UNIVERSITY/mdu_project_4$ export color=blue
+	noobian1@Ubuntu24:~/MDU_MY_DEEPSEEK_UNIVERSITY/mdu_project_4$ python3
+	Python 3.12.3 (main, Mar 23 2026, 19:04:32) [GCC 13.3.0] on linux
+	Type "help", "copyright", "credits" or "license" for more information.
+	>>> print(color)
+	Traceback (most recent call last):
+	  File "<stdin>", line 1, in <module>
+	NameError: name 'color' is not defined
+	>>> "import os; print(os.environ.get('my_color', 'NOT FOUND'))"
+	"import os; print(os.environ.get('my_color', 'NOT FOUND'))"
+	>>> print(color)
+	Traceback (most recent call last):
+	  File "<stdin>", line 1, in <module>
+	NameError: name 'color' is not defined
+	>>> exit()
+	noobian1@Ubuntu24:~/MDU_MY_DEEPSEEK_UNIVERSITY/mdu_project_4$ python3
+	Python 3.12.3 (main, Mar 23 2026, 19:04:32) [GCC 13.3.0] on linux
+	Type "help", "copyright", "credits" or "license" for more information.
+	>>> print($color)
+	  File "<stdin>", line 1
+	    print($color)
+	          ^
+	SyntaxError: invalid syntax
+	>>> exit()
+
+Step 6: The security demonstration:
+
+noobian1@Ubuntu24:~/MDU_MY_DEEPSEEK_UNIVERSITY/mdu_project_4$ ps auxe | grep SECRET
+noobian1   26390  500  0.0  13892  4860 pts/1    R+   10:47   0:00 ps auxe SHELL=/bin/bash SESSION_MANAGER=local/Ubuntu24.04:
+@/tmp/.ICE-unix/2281,unix/Ubuntu24.04:/tmp/.ICE-unix/2281 QT_ACCESSIBILITY=1 COLORTERM=truecolor 
+XDG_CONFIG_DIRS=/etc/xdg/xdg-ubuntu:/etc/xdg XDG_MENU_PREFIX=gnome- GNOME_DESKTOP_SESSION_ID=this-is-deprecated 
+CONDA_EXE=/home/noobian1/anaconda3/bin/conda _CE_M=GNOME_SHELL_SESSION_MODE=ubuntu SSH_AUTH_SOCK=/run/user/1000/keyring/ssh 
+SECRET=test_1_2
+
+
+Step 7: Clean up (remove the secret from your environment), what do you see?
+
+	when using the commands ps auxe | grep SECRET and ps auxe | grep color I still find things with the keyword SECRET or color
+but none of them have the value test1_2 or blue which are the values I had assigned to my environment variables.
+
+Next:
+
+Answer the questions embedded in Steps 1-6 (the ones that say "What do you see?") answered previosly on this text file.
+
+Write a one-sentence summary of why export is needed. - Export is needed to be able to work with variables accross different 
+child processes.
+
+Write a one-sentence warning about storing passwords in environment variables. - Anyone with acces could read it using ps auxe
+
+
+Next: 
+
+
+Quiz for Project #4 (After You Run the Commands)
+
+    What is the difference between env and echo $HOME? env shows all environment variables in the system, echo $HOME only shows the 
+value of $HOME variable which is a path
+
+    If you set x=5 in bash, then run python3 -c "print(x)", what happens and why? not found message because the variable is not 
+available for the environment
+
+    What command removes an environment variable? unset + variable_name
+
+    Why does ps auxe show environment variables? (Think: what does the e flag stand for?) all user executing environment, that is my
+best guess, and so it shows all environment variables from the user
+
+    If you want a variable to be available to a child process, what must you do? export + variable_name
+
+
+Next: 
+
+
+Mathematical Thinking Exercise (Project #4)
+
+Problem: A system has 1,000 users. Each user has a unique environment variable called USER_SECRET with a random 4-digit PIN (0000 to 9999).
+
+If an attacker can run ps auxe on the system, what is the probability they can see at least one user's PIN?
+
+Step 1: Total possible PINs = 10,000 (0000 to 9999)
+
+Step 2: Probability a specific user's PIN is guessed randomly = 1/10,000 = 0.0001
+
+Step 3: But the attacker is not guessing — they are reading the environment variable directly with ps auxe. If they can see it, they know it with 100% certainty.
+
+Step 4: So the question becomes: What is the probability that at least one user has a process running with their USER_SECRET exposed?
+
+Assume: At any given time, 10% of users have a process running (100 users). Each running process exposes its environment.
+
+Answer: If 100 users have running processes, the attacker sees 100 PINs directly. Probability is 100% (they will see them all).
+
+Moral of the story: Environment variables are not a secret store. Anyone who can run ps auxe on the same machine can read them.
+
+
+... I must say, I am starting with arithmetic, don't even mention algebra, so of course I have zero idea about statistics or 
+probability, not just that, I mean, I understand the thought process behind this last mathematical thinking exercise, 
+how ever, you solved it, I only had to read, and yes, I could have though of something like that, however, I am not sure that 
+is the best way for me to practice mathematical thinking, but I did understand what you explained.
+
+
+
+Questions: 
+
+1.- explain this: python3 -c "import os; print(os.environ.get('my_color', 'NOT FOUND'))"
+
+
+2.- Why did my exported variables did not work?
+
+
+3.- can you teach me in a more profound way the probability mathematical thinking you explained before?
+3.1.- or can we do some other math problems, just a couple for me to keep getting better? 
+
+
+fix for environment variables ... import os ... print(os.environ.get('color', 'not found'))
+
+noobian1@Ubuntu24:~/MDU_MY_DEEPSEEK_UNIVERSITY/mdu_project_4$ export color=blue
+noobian1@Ubuntu24:~/MDU_MY_DEEPSEEK_UNIVERSITY/mdu_project_4$ python3
+Python 3.12.3 (main, Mar 23 2026, 19:04:32) [GCC 13.3.0] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>> print(os.environ.get('color', 'NOT FOUND'))
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+NameError: name 'os' is not defined. Did you forget to import 'os'?
+>>> import os
+>>> print(os.environ.get('color', 'NOT FOUND'))
+blue
+>>> 

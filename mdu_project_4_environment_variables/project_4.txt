@@ -1,0 +1,112 @@
+You Are Ready for Project #4 — The Proper Way
+
+Now I will give you one command at a time, with explanation before each. Run them in order.
+Step 1: See your current environment variables
+
+Before you run: This command shows all environment variables currently active in your terminal. You will see HOME, USER, PATH, SHELL, and many others.
+bash
+
+env
+
+Run it. Do not post the entire output (it's long). Just tell me: What is the value of SHELL? (Look for a line starting with SHELL=)
+Step 2: See one specific variable
+
+Before you run: echo $HOME prints your home directory. The $ tells bash to replace $HOME with its value.
+bash
+
+echo $HOME
+
+Run it. What do you see?
+Step 3: Create a shell variable (not exported)
+
+Before you run: my_color="blue" creates a variable that exists ONLY in this bash process. No child process can see it.
+bash
+
+my_color="blue"
+echo "Shell variable value: $my_color"
+
+Run it. What do you see?
+Step 4: Verify Python cannot see it
+
+Before you run: We start Python and try to print my_color. It will fail because my_color is not exported.
+bash
+
+python3 -c "import os; print(os.environ.get('my_color', 'NOT FOUND'))"
+
+Run it. What does it print?
+Step 5: Export the variable
+
+Before you run: export my_color promotes the shell variable to an environment variable. Now child processes will inherit it.
+bash
+
+export my_color
+python3 -c "import os; print(os.environ.get('my_color', 'NOT FOUND'))"
+
+Run it. What does it print now?
+Step 6: The security demonstration
+
+Before you run: This shows why storing secrets in environment variables is dangerous. We create a secret, then use ps auxe to see it.
+bash
+
+export SECRET="password123"
+ps auxe | grep SECRET
+
+Run it. Do you see SECRET=password123 in the output?
+Step 7: Clean up (remove the secret from your environment)
+
+Before you run: unset removes the variable from the environment.
+bash
+
+unset SECRET
+unset my_color
+ps auxe | grep SECRET   # Should show nothing
+
+Run it.
+Your Tasks (After Running the Steps Above)
+
+    Answer the questions embedded in Steps 1-6 (the ones that say "What do you see?")
+
+    Write a one-sentence summary of why export is needed.
+
+    Write a one-sentence warning about storing passwords in environment variables.
+
+Quiz for Project #4 (After You Run the Commands)
+
+    What is the difference between env and echo $HOME?
+
+    If you set x=5 in bash, then run python3 -c "print(x)", what happens and why?
+
+    What command removes an environment variable?
+
+    Why does ps auxe show environment variables? (Think: what does the e flag stand for?)
+
+    If you want a variable to be available to a child process, what must you do?
+
+Mathematical Thinking Exercise (Project #4)
+
+Problem: A system has 1,000 users. Each user has a unique environment variable called USER_SECRET with a random 4-digit PIN (0000 to 9999).
+
+If an attacker can run ps auxe on the system, what is the probability they can see at least one user's PIN?
+
+Step 1: Total possible PINs = 10,000 (0000 to 9999)
+
+Step 2: Probability a specific user's PIN is guessed randomly = 1/10,000 = 0.0001
+
+Step 3: But the attacker is not guessing — they are reading the environment variable directly with ps auxe. If they can see it, they know it with 100% certainty.
+
+Step 4: So the question becomes: What is the probability that at least one user has a process running with their USER_SECRET exposed?
+
+Assume: At any given time, 10% of users have a process running (100 users). Each running process exposes its environment.
+
+Answer: If 100 users have running processes, the attacker sees 100 PINs directly. Probability is 100% (they will see them all).
+
+Moral of the story: Environment variables are not a secret store. Anyone who can run ps auxe on the same machine can read them.
+Before You Proceed
+
+    Do you have any questions about what you just ran?
+
+If not, run the 7 steps above, answer the embedded questions, complete the quiz, and post your results.
+
+Then we move to Project #5 — File I/O: Reading and Writing Files (where we learn the proper way to store secrets: in files with restricted permissions).
+
+You are building correctly now. One brick at a time.

@@ -1,0 +1,17 @@
+# Session logs (contain commands and possible secrets)
+session*.txt
+*.log
+*.tmp
+
+# Backup files
+*~
+*.swp
+*.bak
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Your personal notes (keep them local)
+mdu_*.txt
+mdu_*.txt~
