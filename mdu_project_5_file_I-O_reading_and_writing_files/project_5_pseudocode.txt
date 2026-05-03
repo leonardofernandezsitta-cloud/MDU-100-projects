@@ -1,0 +1,48 @@
+Project #5 Pseudocode.
+
+Real-Life Problem
+
+You build a to-do list program. The user adds tasks like "Buy milk" and "Call doctor". The program runs, shows the tasks, and lets 
+the user add new ones.
+
+But when the program closes, all tasks disappear.
+
+You need a way to save tasks between runs. Environment variables cannot do this (they die when the process ends). You need files.
+
+task 1: ask user to input task and append to todo.txt
+task 2: build over task1: ask user if they want to add task or read list
+task 3: show user how to display todo list
+
+task 1 pseudocode:
+
+a.- we need to recieve input
+b.- we need to save input into a .txt file
+
+
+1.- ask the user to add a new task:
+
+	Bash: echo "Hi! What do you have to do? "
+	
+	Python: new_task = input(print("Hi! What do you have to do? ")) 
+
+2.- store input in a variable:
+
+	Bash: read new_task
+
+	Python: already asked for input on previous step
+
+3.- Append task to todo.txt
+
+	Bash: 
+
+
+4.- print instructions for user to read todo.txt 
+
+
+
+
+
+
+
+
+ 

@@ -1,0 +1,53 @@
+Project #5 Questions.
+
+1.- In ther next code you provided, please explain to me:
+
+line_number=1
+while read line; do <-- the variable line is being created right here, why is it being created and used in the next line? is line
+a command? or is it just avariable we created? please explain
+    echo "$line_number: $line"
+    ((line_number++))
+done < test_2.txt
+
+2.- Can I use "echo "list_name" > $list_name.txt"? (that way every new name would create a new .txt file wouldn't it?)
+
+echo "Enter list name: "
+read list_name
+echo "$list_name" > test_3.txt
+
+3.- What is exactly happening when we "done  < test.txt"?
+
+echo "Hello World" > test.txt
+while read first second; do
+    echo "First word: $first"
+    echo "Second word: $second"
+done < test.txt
+
+4.- In the line (echo "$list_name" > "$filename"), why do we need "" around the $variable? 
+
+
+5.- Explain this line in detail please: with open(filename, 'w') as f:
+
+
+6.- If you look at my python script you will notice I used + "\n" + "\n" to give a 1 line space between the title and the first list
+item, how can I do that with my bash script?
+
+7.- Why is one of the files .txt and the other isn't?
+
+-rw-rw-r-- 1 noobian1 noobian1     78 May  3 12:12 Sopping_List
+-rw-rw-r-- 1 noobian1 noobian1     81 May  3 12:14 Sopping_List.txt
+
+... I do believe that the one created at 12:12 is the python script
+
+
+Before Project 6
+
+    Do you have any questions about Project 5?
+
+Ask about:
+
+    with open() and why it auto-closes files
+
+    The difference between 'w' and 'a' modes
+
+    Why "done" was appearing in your file and how you fixed it

@@ -1,0 +1,135 @@
+Project 5: File I/O (Reading and Writing Files)
+Real-Life Problem
+
+You build a to-do list program. The user adds tasks like "Buy milk" and "Call doctor". The program runs, shows the tasks, and lets the user add new ones.
+
+But when the program closes, all tasks disappear.
+
+You need a way to save tasks between runs. Environment variables cannot do this (they die when the process ends). You need files.
+What You Will Learn
+Concept	What it is
+File I/O	Input/Output from/to files
+open() in Python	Open a file for reading/writing
+Modes	'r' (read), 'w' (write), 'a' (append)
+with statement	Automatically closes files
+> >> in Bash	Redirect output to files
+< in Bash	Read input from files
+cat	Display file contents
+Absolute vs relative paths	Where files live in the filesystem
+Your Task (You Will Write the Code)
+
+I will not give you the full code. You will write it yourself, step by step.
+Step 1: Python — Write a task to a file
+
+Create todo.py in a new folder:
+bash
+
+cd ~/MDU_MY_DEEPSEEK_UNIVERSITY
+mkdir mdu_project_5_file_io
+cd mdu_project_5_file_io
+nano todo.py
+
+Your mission: Write a Python program that:
+
+    Asks the user: "Enter a task: "
+
+    Opens a file called tasks.txt in append mode ('a')
+
+    Writes the task to the file, followed by a newline (\n)
+
+    Closes the file
+
+    Prints: "Task saved!"
+
+Do not look up the answer yet. Try to write it using what you know. Use input(), open(), .write(), and .close().
+
+When you are stuck, ask me for a hint, not the full answer.
+Step 2: Bash — Same thing
+
+Create todo.sh:
+bash
+
+nano todo.sh
+
+Your mission: Write a Bash script that:
+
+    Asks the user: "Enter a task: "
+
+    Appends that task to tasks.txt (using >>)
+
+    Echoes "Task saved!"
+
+Hint: read for input, >> tasks.txt to append.
+Step 3: Python — Read and display all tasks
+
+Add a new feature to todo.py. The program should:
+
+    Ask the user: "Do you want to (1) Add task or (2) View tasks? "
+
+    If 1, do the add task feature from Step 1
+
+    If 2, open tasks.txt in read mode ('r'), read all lines, and print them numbered (1. Buy milk, 2. Call doctor, etc.)
+
+Hint: Use .readlines() and enumerate().
+Step 4: Bash — Read and display all tasks
+
+Add the same feature to todo.sh:
+
+    Ask: "Do you want to (1) Add task or (2) View tasks? "
+
+    If 1, append a new task
+
+    If 2, display all tasks with cat -n tasks.txt (the -n flag adds line numbers)
+
+Mathematical Thinking Exercise (For math_bootcamp.txt)
+
+Problem: File permissions in Linux are represented by three octal digits (0-7). Each digit is the sum of read(4), write(2), execute(1) permissions.
+
+Examples:
+
+    7 = 4+2+1 = rwx
+
+    6 = 4+2 = rw-
+
+    5 = 4+1 = r-x
+
+    0 = ---
+
+For a file with permission 754:
+
+    What does the first digit (7) mean for the owner? (rwx? rw-? etc.)
+
+    What does the second digit (5) mean for the group?
+
+    What does the third digit (4) mean for others?
+
+    Write the full permission string (like rwxr-xr--)
+
+Create math_bootcamp.txt inside your Project 5 folder. Write your answers.
+Bash Bootcamp Addition
+
+In your mdu_bash_bootcamp folder, create a new script called file_redirection.sh that demonstrates:
+bash
+
+#!/usr/bin/env bash
+# Demonstrates > (overwrite), >> (append), < (read input from file)
+
+echo "Line 1" > test.txt          # overwrites or creates
+echo "Line 2" >> test.txt         # appends
+cat test.txt                      # displays content
+while read line; do
+    echo "Read: $line"
+done < test.txt                   # redirects file content as input
+
+Run it and understand each line.
+Your Next Actions
+
+    Try to write todo.py (Step 1). If stuck after 5 minutes, ask for a hint.
+
+    Write todo.sh (Step 2).
+
+    Add the view feature (Steps 3 & 4).
+
+    Complete the math exercise.
+
+    Create and run file_redirection.sh in the bash bootcamp folder.
