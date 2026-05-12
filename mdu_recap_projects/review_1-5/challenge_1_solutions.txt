@@ -1,0 +1,1415 @@
+===== I started with pseudo-code: =====
+
+=== Pseudo-code (challenge 1 from review 1-5) ===
+
+a) before python script (bash):
+
+1.- export USER_NAME=""
+2.- export GREETING_FILE=""
+
+b) python pseudo-code
+
+1.- import os
+2.- import datetime
+
+3.- create variable for file name (filename = input())
+4.- create variable to store user name
+5.- create string to append with user input variable and datetime library (greeting = f'Hello {name}! it is {datetime}, have a good one!')
+
+6.- create file with open(filename + ".txt")
+
+7.- append greeting "with open(greeting)"
+
+8.- read file with open(filename, 'r') as f:
+	
+
+
+===== Then I started my code like this: =====
+
+#!/usr/bin/env python3
+# This script uses environment variables to append a greeting to a text file and to read from the same text file
+
+import os
+import datetime
+
+name = input("Enter your name (eg: Jhon Doe): ")
+USER_NAME = name
+filename = input("Enter file name: ")
+GREETING_FILE = filename
+
+# need to create the file
+with open(filename, 'w') as f:
+
+# use user input to print a greeting
+std_greet = f"Hello {USER_NAME}, it is {datetime}, have a good one!"
+
+# append greeting to file
+with open(filename, 'a') as f:
+         f.append(std_greet + "\n")
+
+# read file
+
+with open(filename, 'r') as f:
+          print(f.read())
+
+
+
+===== So, at this point I was stuck and presented my code to DeepSeek to get feedback: =====
+
+
+You're very close! You have the right logic, but there are a few syntax errors and logical issues. Let me fix them for you.
+Problems with Your Code:
+
+    f.append() doesn't exist - Files use f.write(), not append()
+
+    datetime alone is invalid - You need datetime.datetime.now() or similar
+
+    You're not using the environment variables - You created USER_NAME and GREETING_FILE as regular variables, not environment variables
+
+    You opened the file twice unnecessarily - Can just open once in append mode or write mode
+
+Corrected Version:
+python
+
+#!/usr/bin/env python3
+
+import os
+import datetime
+
+# Get input from user
+name = input("Enter your name (eg: John Doe): ")
+filename = input("Enter file name: ")
+
+# Assign to environment variables (optional - for child processes)
+os.environ['USER_NAME'] = name
+os.environ['GREETING_FILE'] = filename
+
+# Get current timestamp
+current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+# Create the greeting
+greeting = f"Hello {name}, it is {current_time}, have a good one!"
+
+# Write greeting to file (this creates the file if it doesn't exist)
+with open(filename, 'w') as f:
+    f.write(greeting + "\n")
+
+# Read and display the file contents
+with open(filename, 'r') as f:
+    print("\nFile contents:")
+    print(f.read())
+
+Even Better Version (Using Environment Variables):
+
+Since your exercise involves environment variables, you should actually read them (even though they're empty initially):
+python
+
+#!/usr/bin/env python3
+
+import os
+import datetime
+
+# Check if environment variables already have values
+existing_name = os.environ.get('USER_NAME')
+existing_file = os.environ.get('GREETING_FILE')
+
+# If environment variables are empty, ask user for input
+if not existing_name:
+    name = input("Enter your name (eg: John Doe): ")
+    os.environ['USER_NAME'] = name
+else:
+    name = existing_name
+    print(f"Using existing USER_NAME: {name}")
+
+if not existing_file:
+    filename = input("Enter file name: ")
+    os.environ['GREETING_FILE'] = filename
+else:
+    filename = existing_file
+    print(f"Using existing GREETING_FILE: {filename}")
+
+# Get current timestamp
+current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+# Create the greeting
+greeting = f"Hello {name}, it is {current_time}, have a good one!"
+
+# Write greeting to file
+with open(filename, 'w') as f:
+    f.write(greeting + "\n")
+
+# Read and display the file contents
+print("\n" + "="*40)
+with open(filename, 'r') as f:
+    print(f.read())
+print("="*40)
+
+# Show what's in environment (optional)
+print(f"\nEnvironment variable USER_NAME = {os.environ.get('USER_NAME')}")
+print(f"Environment variable GREETING_FILE = {os.environ.get('GREETING_FILE')}")
+
+What Your Original Code Would Have Produced:
+Issue	Your Code	Fix
+f.append()	Doesn't exist	Use f.write()
+datetime alone	TypeError	Use datetime.datetime.now()
+File handling	Opened twice unnecessarily	Can combine or keep separate
+
+
+===== And then I went with a simpler version =====
+
+#!/usr/bin/env python3
+# This scrip uses environment variables to create a text file and append to it a greeting with user input name
+
+import os
+import datetime
+
+name = input("Enter your name (eg: John Doe): ")
+filename = input("Enter file name: ")
+
+# Optional: Set environment variables
+os.environ['USER_NAME'] = name
+os.environ['GREETING_FILE'] = filename
+
+# Write greeting to file
+with open(filename, 'w') as f:
+    f.write(f"Hello {name}, it is {datetime.datetime.now()}, have a good one!\n")
+
+# Read and display
+with open(filename, 'r') as f:
+    print(f.read())
+
+
+============== Here is the last of it ===============
+
+
+
+#!/usr/bin/env python3
+# This script uses environment variables to append a greeting to a text file and to read from the same text file
+
+# 1. Import os and datetime modules
+
+import os
+import datetime
+
+
+# 2. Check if USER_NAME exists in environment:
+#       If yes, get its value and store in a variable called 'name'
+#       If no or empty, ask user "Enter your name:" and store in 'name'
+#       Then set os.environ['USER_NAME'] = name
+
+if  NOT os.environ.get("USER_NAME") or "":
+	name = os.environ.get("USER_NAME")
+else:
+	name = input("Enter your name: ")
+	os.environ["USER_NAME"] = name
+
+# 3. Check if GREETING_FILE exists in environment:
+#       If yes, get its value and store in a variable called 'filename'
+#       If no or empty, ask user "Enter filename:" and store in 'filename'
+#       Then set os.environ['GREETING_FILE'] = filename
+
+if NOT os.environ.get("GREETING_FILE) or "":
+	filename = os.environ.get("GREETING_FILE")
+else:
+	filename = input("Enter file name: ")
+	os.environ["GREETING_FILE"] = filename
+
+# 4. Create a timestamp using datetime.now()
+#       Format it nicely (e.g., "2026-05-04 15:30:22")
+
+time_stamp = datetime.datetime.now(y%, m%, %d, h%, m%, s%)
+
+
+# 5. Create the greeting string:
+#       f"Hello {name}, it is {time_stamp}. Have a good one!\n"
+
+greeting = f'Hello {name}, it is {time_stamp}. Have a good one!\n'
+
+
+# 6. Open the file in append mode ('a') using the filename variable
+#       Write the greeting string to the file
+
+with open(filename, 'a') as f:
+	f.write(greeting)
+	
+	
+# 7. Open the same file in read mode ('r')
+#       Read all lines into a list using .readlines()
+#       Get the last 3 lines using slicing: last_lines = all_lines[-3:]
+
+with open(filename, 'r') as f:
+	all_lines = f.readlines()
+	last_lines = all_lines[-3:]
+
+
+# 8. Print a header like "=== Last 3 lines of [filename] ==="
+#       Loop through last_lines and print each one
+
+print("=== Last 3 lines of [filename] ===")
+
+for line in last_lines:
+	print(line)
+
+
+# 9. (Optional) Print a confirmation message
+
+print("Mission accomplished!")
+
+You are very close! You fixed the for line in(last_lines): issue (now has the space correctly). Good job.
+
+But you still have three critical errors that will prevent this from running. Let me show you exactly what they are and how to fix them.
+Error 1: NOT should be not (lowercase)
+
+Your code:
+python
+
+if NOT os.environ.get("USER_NAME") or "":
+
+Problem: Python keywords are case-sensitive. NOT means nothing to Python. It must be lowercase not.
+
+Fix:
+python
+
+if not os.environ.get("USER_NAME") or "":
+
+But this line has another problem (see below).
+Error 2: Missing closing quote on line 26
+
+Your code:
+python
+
+if NOT os.environ.get("GREETING_FILE) or "":
+
+Problem: Look carefully at "GREETING_FILE) — you have a closing parenthesis ) but the closing quote " is missing. It should be "GREETING_FILE")
+
+Fix:
+python
+
+if NOT os.environ.get("GREETING_FILE") or "":
+
+(Also change NOT to not)
+Error 3: The datetime.now() line is completely wrong
+
+Your code:
+python
+
+time_stamp = datetime.datetime.now(y%, m%, %d, h%, m%, s%)
+
+Problem: datetime.datetime.now() takes no arguments. The % symbols are not valid Python syntax. Those format codes belong inside .strftime(), not inside .now().
+
+Fix (two options):
+
+Option A (simple):
+python
+
+time_stamp = datetime.datetime.now()
+
+This gives: 2026-05-05 14:30:22.123456
+
+Option B (formatted nicely):
+python
+
+time_stamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+This gives: 2026-05-05 14:30:22
+The Logic Error (Still Present)
+
+Your if logic is backwards. Let me show you:
+
+Your code:
+python
+
+if not os.environ.get("USER_NAME") or "":
+    name = os.environ.get("USER_NAME")
+else:
+    name = input("Enter your name: ")
+
+What happens when USER_NAME is NOT set:
+
+    os.environ.get("USER_NAME") returns None
+
+    not None is True
+
+    So it enters the if block (the first block)
+
+    It tries name = os.environ.get("USER_NAME") which is None (empty!)
+
+    Your name becomes None instead of asking the user ❌
+
+What you want: If USER_NAME is NOT set or empty, ask the user. If it IS set, use it.
+
+Correct logic:
+python
+
+user_value = os.environ.get('USER_NAME', '')
+if user_value == '':
+    name = input("Enter your name: ")
+    os.environ['USER_NAME'] = name
+else:
+    name = user_value
+
+Complete Corrected Code (with your structure preserved)
+python
+
+#!/usr/bin/env python3
+# This script uses environment variables to append a greeting to a text file and to read from the same text file
+
+import os
+import datetime
+
+# 2. Check USER_NAME environment variable
+user_value = os.environ.get('USER_NAME', '')
+if user_value == '':
+    name = input("Enter your name: ")
+    os.environ['USER_NAME'] = name
+else:
+    name = user_value
+
+# 3. Check GREETING_FILE environment variable
+file_value = os.environ.get('GREETING_FILE', '')
+if file_value == '':
+    filename = input("Enter file name: ")
+    os.environ['GREETING_FILE'] = filename
+else:
+    filename = file_value
+
+# 4. Create timestamp
+time_stamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+# 5. Create greeting string
+greeting = f'Hello {name}, it is {time_stamp}. Have a good one!\n'
+
+# 6. Append greeting to file
+with open(filename, 'a') as f:
+    f.write(greeting)
+
+# 7. Read file and get last 3 lines
+with open(filename, 'r') as f:
+    all_lines = f.readlines()
+    last_lines = all_lines[-3:]
+
+# 8. Display last 3 lines
+print(f"=== Last 3 lines of {filename} ===")
+for line in last_lines:
+    print(line.strip())
+
+# 9. Confirmation message
+print("Mission accomplished!")
+
+Summary of What You Need to Change
+Line	Your code	Change to
+12	if NOT os.environ.get("USER_NAME") or "":	user_value = os.environ.get('USER_NAME', '')
+13	name = os.environ.get("USER_NAME")	(move to proper if/else structure)
+14-15	(else block)	(restructure)
+20	if NOT os.environ.get("GREETING_FILE) or "":	file_value = os.environ.get('GREETING_FILE', '')
+26	time_stamp = datetime.datetime.now(y%, m%, %d, h%, m%, s%)	time_stamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+43	print("=== Last 3 lines of [filename] ===")	print(f"=== Last 3 lines of {filename} ===")
+Your Next Step
+
+Option A: Copy my corrected code and run it. See it work. Then compare it to yours line by line.
+
+Option B: Fix your own code using the table above. Change one error at a time. Run it after each change.
+
+Which option do you prefer?
+what happens if I do:
+
+if os.environ.get("USER_NAME"):
+         name = os.environ.get("USER_NAME")
+else:
+         name = input("Enter your name: ")
+         export os.environ("USER_NAME") = name
+
+Great question! You are experimenting with the logic. Let me break down exactly what happens with each line.
+Your Code:
+python
+
+if os.environ.get("USER_NAME"):
+    name = os.environ.get("USER_NAME")
+else:
+    name = input("Enter your name: ")
+    export os.environ("USER_NAME") = name
+
+Line-by-Line Analysis
+Line 1: if os.environ.get("USER_NAME"):
+
+What happens:
+
+    os.environ.get("USER_NAME") looks for the environment variable
+
+    If USER_NAME exists AND has a value (not empty), it returns that value
+
+    In Python, a non-empty string is considered True
+
+    So the if block runs when USER_NAME has a value
+
+Example:
+bash
+
+export USER_NAME="Alice"   # In terminal
+
+Then os.environ.get("USER_NAME") returns "Alice" → True → enters if block ✅
+
+If USER_NAME is empty or not set:
+bash
+
+export USER_NAME=""        # Empty
+# or
+unset USER_NAME            # Not set
+
+Then os.environ.get("USER_NAME") returns None or "" → False → enters else block ✅
+
+This logic is actually CORRECT! Your if condition is good.
+Line 2: name = os.environ.get("USER_NAME")
+
+What happens:
+
+    Stores the existing environment variable value into a variable called name
+
+    This is correct ✅
+
+Line 4: name = input("Enter your name: ")
+
+What happens:
+
+    Asks user for name
+
+    Stores it in name
+
+    This is correct ✅
+
+Line 5: export os.environ("USER_NAME") = name ❌
+
+This line has THREE syntax errors:
+Error	Problem	Fix
+export	export is a bash command, not Python syntax	Remove export
+os.environ("USER_NAME")	os.environ is a dictionary, use [] not ()	Change () to []
+(...) = name	You cannot assign a value inside the brackets like this	Fix to os.environ['USER_NAME'] = name
+
+Correct version:
+python
+
+os.environ['USER_NAME'] = name
+
+The Complete Corrected Version of Your Logic
+python
+
+if os.environ.get("USER_NAME"):
+    name = os.environ.get("USER_NAME")
+else:
+    name = input("Enter your name: ")
+    os.environ['USER_NAME'] = name
+
+This works perfectly. ✅
+What Actually Happens When You Run This
+Scenario 1: USER_NAME already set in terminal
+bash
+
+export USER_NAME="Alice"
+python3 script.py
+
+Line	Result
+if os.environ.get("USER_NAME"):	"Alice" exists → True
+name = os.environ.get("USER_NAME")	name = "Alice"
+(else block skipped)	
+Final: name = "Alice"	No user prompt ✅
+Scenario 2: USER_NAME not set or empty
+bash
+
+unset USER_NAME
+python3 script.py
+
+Line	Result
+if os.environ.get("USER_NAME"):	Returns None → False
+(if block skipped)	
+name = input("Enter your name: ")	Asks user → user types "Bob"
+os.environ['USER_NAME'] = name	Sets USER_NAME = "Bob" for THIS Python session
+Final: name = "Bob"	✅
+The Important Warning (Again)
+
+When you set os.environ['USER_NAME'] = name inside Python, it only exists while Python is running.
+
+After the script ends, the terminal's USER_NAME is unchanged.
+bash
+
+# Before Python
+export USER_NAME="Alice"
+python3 script.py   # Script changes USER_NAME to "Bob" internally
+# After Python exits
+echo $USER_NAME     # Still "Alice" (not changed!)
+
+Summary Table: Your Question Answered
+Your code	What it means	Correct?
+if os.environ.get("USER_NAME"):	"If USER_NAME exists and has a value"	✅ Correct
+name = os.environ.get("USER_NAME")	Store that value in name	✅ Correct
+name = input(...)	Ask user for name	✅ Correct
+export os.environ("USER_NAME") = name	❌ Invalid syntax	❌ Wrong
+os.environ['USER_NAME'] = name	Set environment variable in Python	✅ Correct
+The One-Line Version (More Advanced)
+
+You can also write it like this:
+python
+
+name = os.environ.get('USER_NAME') or input("Enter your name: ")
+
+How it works: If os.environ.get('USER_NAME') returns a value, use it. If it returns None or empty string, use the result of input() instead.
+
+But stick with your if/else version for now. It is clearer.
+Your Next Step
+
+Try this simplified version of your code:
+python
+
+#!/usr/bin/env python3
+import os
+
+if os.environ.get("USER_NAME"):
+    name = os.environ.get("USER_NAME")
+else:
+    name = input("Enter your name: ")
+    os.environ['USER_NAME'] = name
+
+print(f"Hello, {name}")
+
+Run it twice:
+
+    First time with unset USER_NAME (should ask for name)
+
+    Second time with export USER_NAME="Alice" (should NOT ask)
+
+See the difference?
+how about now?
+
+#!/usr/bin/env python3
+# This script uses environment variables to append a greeting to a text file and to read from the same text file
+
+# 1. Import os and datetime modules
+
+import os
+import datetime
+
+
+# 2. Check if USER_NAME exists in environment:
+#       If yes, get its value and store in a variable called 'name'
+#       If no or empty, ask user "Enter your name:" and store in 'name'
+#       Then set os.environ['USER_NAME'] = name
+
+if  not os.environ.get("USER_NAME"):
+	name = input("Enter your name: ")
+	os.environ["USER_NAME"] = name
+else:
+	name = os.environ.get("USER_NAME")
+	
+	
+# 3. Check if GREETING_FILE exists in environment:
+#       If yes, get its value and store in a variable called 'filename'
+#       If no or empty, ask user "Enter filename:" and store in 'filename'
+#       Then set os.environ['GREETING_FILE'] = filename
+
+if os.environ.get("GREETING_FILE"):
+	filename = os.environ.get("GREETING_FILE")
+else:
+	filename = input("Enter file name: ")
+	os.environ["GREETING_FILE"] = filename
+
+# 4. Create a timestamp using datetime.now()
+#       Format it nicely (e.g., "2026-05-04 15:30:22")
+
+time_stamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+
+# 5. Create the greeting string:
+#       f"Hello {name}, it is {time_stamp}. Have a good one!\n"
+
+greeting = f'Hello {name}, it is {time_stamp}. Have a good one!\n'
+
+
+# 6. Open the file in append mode ('a') using the filename variable
+#       Write the greeting string to the file
+
+with open(filename, 'a') as f:
+	f.write(greeting)
+	
+	
+# 7. Open the same file in read mode ('r')
+#       Read all lines into a list using .readlines()
+#       Get the last 3 lines using slicing: last_lines = all_lines[-3:]
+
+with open(filename, 'r') as f:
+	all_lines = f.readlines()
+	last_lines = all_lines[-3:]
+
+
+# 8. Print a header like "=== Last 3 lines of [filename] ==="
+#       Loop through last_lines and print each one
+
+print("=== Last 3 lines of [filename] ===")
+
+for line in last_lines:
+	print(line)
+
+
+# 9. (Optional) Print a confirmation message
+
+print("Mission accomplished!")
+
+Excellent! You have fixed almost everything. This is very close to working perfectly.
+
+Let me point out the one remaining issue and one improvement.
+Remaining Issue: Line 43 - The Header
+
+Your code:
+python
+
+print("=== Last 3 lines of [filename] ===")
+
+Problem: [filename] is literal text. Python prints exactly [filename], not the actual filename.
+
+What you will see:
+text
+
+=== Last 3 lines of [filename] ===
+
+What you want to see:
+text
+
+=== Last 3 lines of greeting.txt ===
+
+Fix: Use an f-string to insert the variable:
+python
+
+print(f"=== Last 3 lines of {filename} ===")
+
+Improvement Suggestion (Optional but Recommended)
+
+Line 26 - The timestamp formatting is great. But note that .strftime() returns a string, so the output will be:
+text
+
+Hello Alice, it is 2026-05-05 15:30:22. Have a good one!
+
+That is perfectly fine. Just be aware there is no newline before "Have a good one!" (the newline is at the very end after \n).
+One Small Logic Note (Not an Error)
+
+Your USER_NAME logic (lines 12-16):
+python
+
+if not os.environ.get("USER_NAME"):
+    name = input("Enter your name: ")
+    os.environ["USER_NAME"] = name
+else:
+    name = os.environ.get("USER_NAME")
+
+This is CORRECT. ✅
+
+Your GREETING_FILE logic (lines 23-27):
+python
+
+if os.environ.get("GREETING_FILE"):
+    filename = os.environ.get("GREETING_FILE")
+else:
+    filename = input("Enter file name: ")
+    os.environ["GREETING_FILE"] = filename
+
+This is also CORRECT. ✅
+
+Notice the difference: One uses if not, the other uses if. Both work correctly because the logic matches what you want.
+The Only Fix Needed
+
+Change line 43 from:
+python
+
+print("=== Last 3 lines of [filename] ===")
+
+To:
+python
+
+print(f"=== Last 3 lines of {filename} ===")
+
+Complete Corrected Code (Ready to Run)
+python
+
+#!/usr/bin/env python3
+# This script uses environment variables to append a greeting to a text file and to read from the same text file
+
+import os
+import datetime
+
+# 2. Check if USER_NAME exists in environment
+if not os.environ.get("USER_NAME"):
+    name = input("Enter your name: ")
+    os.environ["USER_NAME"] = name
+else:
+    name = os.environ.get("USER_NAME")
+
+# 3. Check if GREETING_FILE exists in environment
+if os.environ.get("GREETING_FILE"):
+    filename = os.environ.get("GREETING_FILE")
+else:
+    filename = input("Enter file name: ")
+    os.environ["GREETING_FILE"] = filename
+
+# 4. Create a timestamp
+time_stamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+# 5. Create the greeting string
+greeting = f'Hello {name}, it is {time_stamp}. Have a good one!\n'
+
+# 6. Append greeting to file
+with open(filename, 'a') as f:
+    f.write(greeting)
+
+# 7. Read file and get last 3 lines
+with open(filename, 'r') as f:
+    all_lines = f.readlines()
+    last_lines = all_lines[-3:]
+
+# 8. Display last 3 lines
+print(f"=== Last 3 lines of {filename} ===")
+for line in last_lines:
+    print(line.strip())
+
+# 9. Confirmation message
+print("Mission accomplished!")
+
+Test It
+
+Run these commands in your terminal:
+bash
+
+# Test 1: No environment variables (script asks for everything)
+unset USER_NAME
+unset GREETING_FILE
+python3 script.py
+
+# Enter "Alice" and "myfile.txt"
+
+# Test 2: Environment variables set (script uses them silently)
+export USER_NAME="Bob"
+export GREETING_FILE="bob_greetings.txt"
+python3 script.py
+
+# Check the files
+cat myfile.txt
+cat bob_greetings.txt
+
+# Test 3: Run again to see appending
+python3 script.py
+cat myfile.txt   # Should have two lines now
+
+Summary
+Part	Status
+Shebang	✅ Correct
+Imports	✅ Correct
+USER_NAME logic	✅ Correct
+GREETING_FILE logic	✅ Correct
+Timestamp	✅ Correct
+Greeting string	✅ Correct
+File append	✅ Correct
+File read	✅ Correct
+Last 3 lines slicing	✅ Correct
+For loop	✅ Correct
+Header print (line 43)	❌ Needs f-string
+Confirmation	✅ Correct
+
+Fix line 43 and you are done. Great work!
+a) Notice the difference: One uses if not, the other uses if. Both work correctly because the logic matches what you want.
+
+answer: I left it like that to have a comparison of both methods
+
+b) Just be aware there is no newline before "Have a good one!" (the newline is at the very end after \n).
+
+answer: I want it to be a single line and just jump line at the end, because we will be reading lineds and printing last 3
+
+here is my corrected code:
+
+#!/usr/bin/env python3
+# This script uses environment variables to append a greeting to a text file and to read from the same text file
+
+# 1. Import os and datetime modules
+
+import os
+import datetime
+
+
+# 2. Check if USER_NAME exists in environment:
+#       If yes, get its value and store in a variable called 'name'
+#       If no or empty, ask user "Enter your name:" and store in 'name'
+#       Then set os.environ['USER_NAME'] = name
+
+if  not os.environ.get("USER_NAME"):
+	name = input("Enter your name: ")
+	os.environ["USER_NAME"] = name
+else:
+	name = os.environ.get("USER_NAME")
+	
+	
+# 3. Check if GREETING_FILE exists in environment:
+#       If yes, get its value and store in a variable called 'filename'
+#       If no or empty, ask user "Enter filename:" and store in 'filename'
+#       Then set os.environ['GREETING_FILE'] = filename
+
+if os.environ.get("GREETING_FILE"):
+	filename = os.environ.get("GREETING_FILE")
+else:
+	filename = input("Enter file name: ")
+	os.environ["GREETING_FILE"] = filename
+
+# 4. Create a timestamp using datetime.now()
+#       Format it nicely (e.g., "2026-05-04 15:30:22")
+
+time_stamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+
+# 5. Create the greeting string:
+#       f"Hello {name}, it is {time_stamp}. Have a good one!\n"
+
+greeting = f'Hello {name}, it is {time_stamp}. Have a good one!\n'
+
+
+# 6. Open the file in append mode ('a') using the filename variable
+#       Write the greeting string to the file
+
+with open(filename, 'a') as f:
+	f.write(greeting)
+	
+	
+# 7. Open the same file in read mode ('r')
+#       Read all lines into a list using .readlines()
+#       Get the last 3 lines using slicing: last_lines = all_lines[-3:]
+
+with open(filename, 'r') as f:
+	all_lines = f.readlines()
+	last_lines = all_lines[-3:]
+
+
+# 8. Print a header like "=== Last 3 lines of [filename] ==="
+#       Loop through last_lines and print each one
+
+print(f"=== Last 3 lines of {filename} ===")
+
+for line in last_lines:
+	print(line)
+
+
+# 9. (Optional) Print a confirmation message
+
+print("Mission accomplished!")
+
+PERFECT! 🎉
+
+You have fixed the header line correctly. Your code is now ready to run.
+Final Code Review - All Checks Pass ✅
+Component	Status	Notes
+Shebang	✅	#!/usr/bin/env python3
+Imports	✅	os and datetime
+USER_NAME logic (if not)	✅	Asks only when missing
+GREETING_FILE logic (if)	✅	Demonstrates both patterns
+Timestamp	✅	Formatted nicely
+Greeting string	✅	Single line with \n at end
+File append	✅	Mode 'a' preserves existing content
+File read	✅	Mode 'r'
+Last 3 lines slicing	✅	all_lines[-3:]
+Header with f-string	✅	f"=== Last 3 lines of {filename} ==="
+For loop	✅	for line in last_lines:
+Confirmation	✅	"Mission accomplished!"
+Your Comments Were Correct
+
+On the if not vs if difference:
+
+    "I left it like that to have a comparison of both methods"
+
+This is smart. You now have a reference for both patterns in the same script.
+
+On the newline placement:
+
+    "I want it to be a single line and just jump line at the end"
+
+Your approach is correct. Each greeting occupies exactly one line. When you read the last 3 lines, each prints on its own line, cleanly separated.
+Run It
+bash
+
+# Make sure you're in the right directory
+cd ~/MDU_MY_DEEPSEEK_UNIVERSITY/mdu_project_2
+
+# Run the script
+python3 greet.py   # (or whatever you named it)
+
+Test these scenarios:
+
+    First run (no env vars):
+    bash
+
+    unset USER_NAME
+    unset GREETING_FILE
+    python3 script.py
+
+        Enter: Alice Cooper
+
+        Enter: greetings.txt
+
+        Script creates file and adds first greeting
+
+    Second run (env vars still not set - script asks again):
+    bash
+
+    python3 script.py
+
+        Enter: Bob Marley
+
+        Enter: greetings.txt (same file)
+
+        Script appends second greeting
+
+    Third run (set env vars):
+    bash
+
+    export USER_NAME="Charlie Chaplin"
+    export GREETING_FILE="greetings.txt"
+    python3 script.py
+
+        Script uses env vars (no prompts)
+
+        Appends third greeting
+
+    Check the file:
+    bash
+
+    cat greetings.txt
+
+    Should show all three greetings.
+
+    Check last 3 lines (should be all of them since only 3 exist):
+    bash
+
+    tail -3 greetings.txt
+
+What You Have Accomplished
+
+You wrote a script that:
+
+    Reads environment variables
+
+    Falls back to user input when variables are missing
+
+    Sets environment variables within Python (for learning purposes)
+
+    Appends timestamped greetings to a file
+
+    Never overwrites existing content
+
+    Displays only the last 3 lines
+
+    Handles both if and if not patterns correctly
+
+This is a complete, working solution.
+One Small Improvement (Optional)
+
+If you want to remove the extra blank line when printing (because .readlines() includes the \n and print() adds another), change:
+python
+
+for line in last_lines:
+    print(line.strip())   # .strip() removes the \n
+
+But your current version works fine.
+You Are Ready
+
+Run the script. Show me the output if you get any errors. Otherwise, challenge 1 is complete.
+
+Would you like to move to Challenge 2, or do you want to test this one more?
+noobian1@Ubuntu24:~$ cd ~/MDU_MY_DEEPSEEK_UNIVERSITY/mdu_recap_projects/review_1-5
+noobian1@Ubuntu24:~/MDU_MY_DEEPSEEK_UNIVERSITY/mdu_recap_projects/review_1-5$ export "USER_NAME"=""
+noobian1@Ubuntu24:~/MDU_MY_DEEPSEEK_UNIVERSITY/mdu_recap_projects/review_1-5$ export "GREETING_FILE"="greeting.txt"
+noobian1@Ubuntu24:~/MDU_MY_DEEPSEEK_UNIVERSITY/mdu_recap_projects/review_1-5$ ls
+challenge_1_code.txt         challenge_1_solutions.txt    challenge_2_solutions.txt    challenge_3_solutions.txt
+challenge_1_pseudo-code.txt  challenge_2_code.txt         challenge_3_code.txt         challenges.txt
+challenge_1.py               challenge_2_pseudo-code.txt  challenge_3_pseudo-code.txt  greeting.txt
+noobian1@Ubuntu24:~/MDU_MY_DEEPSEEK_UNIVERSITY/mdu_recap_projects/review_1-5$ nano challenge_1.py
+noobian1@Ubuntu24:~/MDU_MY_DEEPSEEK_UNIVERSITY/mdu_recap_projects/review_1-5$ unset USER_NAME
+noobian1@Ubuntu24:~/MDU_MY_DEEPSEEK_UNIVERSITY/mdu_recap_projects/review_1-5$ unset GREETING_FILE
+noobian1@Ubuntu24:~/MDU_MY_DEEPSEEK_UNIVERSITY/mdu_recap_projects/review_1-5$ python3 challenge_1.py
+Enter your name: Alice Cooper
+Enter file name: greetings.txt
+=== Last 3 lines of greetings.txt ===
+Hello Alice Cooper, it is 2026-05-05 02:08:32. Have a good one!
+Mission accomplished!
+noobian1@Ubuntu24:~/MDU_MY_DEEPSEEK_UNIVERSITY/mdu_recap_projects/review_1-5$ python3 challenge_1.py
+Enter your name: Bob Marley
+Enter file name: greetings.txt
+=== Last 3 lines of greetings.txt ===
+Hello Alice Cooper, it is 2026-05-05 02:08:32. Have a good one!
+Hello Bob Marley, it is 2026-05-05 02:09:22. Have a good one!
+Mission accomplished!
+noobian1@Ubuntu24:~/MDU_MY_DEEPSEEK_UNIVERSITY/mdu_recap_projects/review_1-5$ export USER_NAME="Charlie Chaplin"
+noobian1@Ubuntu24:~/MDU_MY_DEEPSEEK_UNIVERSITY/mdu_recap_projects/review_1-5$ export GREETING_FILE="greetings.txt"
+noobian1@Ubuntu24:~/MDU_MY_DEEPSEEK_UNIVERSITY/mdu_recap_projects/review_1-5$ python3 challenge_1.py
+=== Last 3 lines of greetings.txt ===
+Hello Alice Cooper, it is 2026-05-05 02:08:32. Have a good one!
+Hello Bob Marley, it is 2026-05-05 02:09:22. Have a good one!
+Hello Charlie Chaplin, it is 2026-05-05 02:10:02. Have a good one!
+Mission accomplished!
+noobian1@Ubuntu24:~/MDU_MY_DEEPSEEK_UNIVERSITY/mdu_recap_projects/review_1-5$ python3 challenge_1.py
+=== Last 3 lines of greetings.txt ===
+Hello Bob Marley, it is 2026-05-05 02:09:22. Have a good one!
+Hello Charlie Chaplin, it is 2026-05-05 02:10:02. Have a good one!
+Hello Charlie Chaplin, it is 2026-05-05 02:10:20. Have a good one!
+Mission accomplished!
+noobian1@Ubuntu24:~/MDU_MY_DEEPSEEK_UNIVERSITY/mdu_recap_projects/review_1-5$ python3 challenge_1.py
+=== Last 3 lines of greetings.txt ===
+Hello Charlie Chaplin, it is 2026-05-05 02:10:02. Have a good one!
+Hello Charlie Chaplin, it is 2026-05-05 02:10:20. Have a good one!
+Hello Charlie Chaplin, it is 2026-05-05 02:10:30. Have a good one!
+Mission accomplished!
+noobian1@Ubuntu24:~/MDU_MY_DEEPSEEK_UNIVERSITY/mdu_recap_projects/review_1-5$ 
+
+
+question: 
+
+what would happen if I enter greetings instead of greetings.txt?
+
+OUTSTANDING! 🎉
+
+Your script runs perfectly. You have successfully completed Challenge 1. The output shows exactly what we expected:
+
+    First run: No environment variables → asked for name and filename → created file with first greeting
+
+    Second run: Still no env vars → asked again → appended second greeting
+
+    Third run: Exported USER_NAME and GREETING_FILE → script used them silently → appended third greeting
+
+    Fourth & Fifth runs: Used existing env vars → appended more greetings → last 3 lines display correctly
+
+Answer to Your Question
+
+What happens if you enter greetings instead of greetings.txt?
+
+Let me show you:
+bash
+
+# If you enter "greetings" (no .txt extension)
+Enter file name: greetings
+
+What happens:
+
+The script creates a file literally named greetings (no extension).
+bash
+
+# After running
+ls -la
+# You would see a file called "greetings" (not "greetings.txt")
+
+# To view it
+cat greetings
+
+# The last 3 lines display would show:
+=== Last 3 lines of greetings ===
+
+Is that okay? Yes, completely. Linux/Unix does not require file extensions. greetings is a valid filename.
+
+Will it cause any problems? No. The script works exactly the same way. The only difference is the filename.
+
+What about greetings.txt vs greetings?
+Filename	What it creates	Works?
+greetings.txt	A file with .txt extension	✅ Yes
+greetings	A file with no extension	✅ Yes
+my file.txt	A file with a space (bad idea)	⚠️ Works but hard to use
+../../../etc/passwd	A file outside your directory	⚠️ Works but dangerous
+What You Learned From This Run
+Observation	Lesson
+First two runs asked for input	No env vars → fallback to user input
+Third run had no prompts	Env vars existed → script used them silently
+File grew each run	'a' mode appends, never overwrites
+Last 3 lines updated correctly	Slicing [-3:] works dynamically
+Charlie Chaplin appears multiple times	Env var persisted across runs (in terminal)
+One Small Note About Your Environment Variable
+
+When you exported USER_NAME="Charlie Chaplin", that value stayed in your terminal session. That is why runs 4 and 5 did not ask for a name.
+
+To clear it:
+bash
+
+unset USER_NAME
+
+Then the script will ask again.
+Challenge 1: COMPLETE ✅
+
+You have successfully:
+
+    Written a Python script from pseudo-code
+
+    Used environment variables correctly
+
+    Handled user input as fallback
+
+    Appended to files without overwriting
+
+    Read and sliced file lines
+
+    Formatted timestamps
+
+    Tested multiple scenarios
+
+
+======================================================================
+======================================================================
+=============================== BASH =================================
+======================================================================
+======================================================================
+
+So, after having done the challenge on python this one was way easier to logic thru, however I did misunderstood hoe the -z flag worked, I presented the following pseudo-code/code to DeepSeek and he pointed out all of my mistakes
+
+here is my pseudo-code/code:
+
+====== BASH PSEUDO-CODE FOR CHALLENGE 1 =====
+
+1.- Indicate system where to find bash to run script <> #!/usr/bin/env bash
+2.- Check if environment variable ${USER_NAME} exists, if not, ask user:
+	if [ -z ${USER_NAME} ]; then
+		name="${USER_NAME}"
+	else
+		read -p "Enter your name(e.g.John Doe): " name
+		export ${USER_NAME}=4{name}
+	fi
+3.- Check if environment variable ${GREETING_FILE} exists, if not, ask user:
+	if [ -z ${GREETING_FILE} ]; then
+		filename=${GREETING_FILE}
+	else
+		filename="greeting.txt"
+		export ${GREETING_FILE}=${filename}
+	fi
+4.- Appends a personalized greeting "Hello USER_NAME, it is DATE" to that file
+	echo "Hello ${USER_NAME}, today is ${date}. Have a good one!" >> ${GREETING_FILE}
+5.- Display the last 3 lines of the file
+	tail -3
+		
+
+And here is DeppSeek's answer:
+
+Problems in Your Pseudo-Code
+Line	Problem	Severity
+2	[ -z ${USER_NAME} ] missing quotes	🔴 Critical
+2	Logic is backwards	🔴 Critical
+2	export ${USER_NAME}=4{name} has typos	🔴 Critical
+3	Logic is backwards	🔴 Critical
+3	export ${GREETING_FILE}=${filename} wrong syntax	🔴 Critical
+4	${date} is not defined	🟡 Fix
+4	$USER_NAME should be $name variable	🟡 Fix
+5	tail -3 missing filename	🟡 Fix
+Fixing Line 2: The Logic is Backwards
+
+Your code:
+bash
+
+if [ -z ${USER_NAME} ]; then
+    name="${USER_NAME}"          # If EMPTY, set name to EMPTY? Wrong!
+else
+    read -p "..." name           # If NOT empty, ask user? Wrong!
+    export ${USER_NAME}=4{name}  # Syntax error
+fi
+
+What you meant: If USER_NAME is EMPTY, ask the user. If NOT empty, use the existing value.
+
+Correct logic:
+bash
+
+if [ -z "$USER_NAME" ]; then
+    # USER_NAME is empty - ask user
+    read -p "Enter your name (e.g., John Doe): " name
+    export USER_NAME="$name"
+else
+    # USER_NAME has a value - use it
+    name="$USER_NAME"
+fi
+
+Fixing Line 3: Same Logic Problem
+
+Your code:
+bash
+
+if [ -z ${GREETING_FILE} ]; then
+    filename=${GREETING_FILE}    # If EMPTY, set filename to EMPTY? Wrong!
+else
+    filename="greeting.txt"      # If NOT empty, set to default? Wrong!
+    export ${GREETING_FILE}=${filename}
+fi
+
+Correct logic:
+bash
+
+if [ -z "$GREETING_FILE" ]; then
+    # GREETING_FILE is empty - use default
+    filename="greeting.txt"
+    export GREETING_FILE="$filename"
+else
+    # GREETING_FILE has a value - use it
+    filename="$GREETING_FILE"
+fi
+
+Fixing Line 4: The Greeting
+
+Your code:
+bash
+
+echo "Hello ${USER_NAME}, today is ${date}. Have a good one!" >> ${GREETING_FILE}
+
+Problems:
+
+    ${USER_NAME} should be ${name} (the variable you stored the name in)
+
+    ${date} is not defined - need to capture date first
+
+    Missing quotes around filename
+
+Fix - Step 1: Get the date first (add this as a new step)
+bash
+
+current_date=$(date "+%Y-%m-%d %H:%M:%S")
+
+Fix - Step 2: Write the greeting
+bash
+
+echo "Hello ${name}, today is ${current_date}. Have a good one!" >> "$filename"
+
+Fixing Line 5: The tail command
+
+Your code:
+bash
+
+tail -3
+
+Fix:
+bash
+
+tail -3 "$filename"
+
+Complete Corrected Pseudo-Code
+bash
+
+====== BASH PSEUDO-CODE FOR CHALLENGE 1 (CORRECTED) =====
+
+1. Shebang: #!/usr/bin/env bash
+
+2. Check USER_NAME environment variable:
+   if [ -z "$USER_NAME" ]; then
+       # USER_NAME is empty - ask user
+       read -p "Enter your name (e.g., John Doe): " name
+       export USER_NAME="$name"
+   else
+       # USER_NAME has a value - use it
+       name="$USER_NAME"
+   fi
+
+3. Check GREETING_FILE environment variable:
+   if [ -z "$GREETING_FILE" ]; then
+       # GREETING_FILE is empty - use default
+       filename="greeting.txt"
+       export GREETING_FILE="$filename"
+   else
+       # GREETING_FILE has a value - use it
+       filename="$GREETING_FILE"
+   fi
+
+4. Get current timestamp:
+   current_date=$(date "+%Y-%m-%d %H:%M:%S")
+
+5. Append greeting to file:
+   echo "Hello ${name}, today is ${current_date}. Have a good one!" >> "$filename"
+
+6. Display last 3 lines of the file:
+   echo "=== Last 3 lines of ${filename} ==="
+   tail -3 "$filename"
+
+7. Exit:
+   exit 0
+
+Summary of What I Fixed
+Your Pseudo-Code	Corrected Version
+[ -z ${USER_NAME} ]	[ -z "$USER_NAME" ] (add quotes)
+name="${USER_NAME}" (when empty)	read -p (ask user when empty)
+read -p (when not empty)	name="$USER_NAME" (use existing when not empty)
+export ${USER_NAME}=4{name}	export USER_NAME="$name"
+No date variable	current_date=$(date "+%Y-%m-%d %H:%M:%S")
+${date} in echo	${current_date}
+${USER_NAME} in echo	${name}
+${GREETING_FILE} in echo	"$filename"
+tail -3	tail -3 "$filename"
+Your Next Step
+
+Now write the actual Bash script based on this corrected pseudo-code.
+
+Create the file:
+bash
+
+nano challenge1.sh
+
+Write the script (convert pseudo-code to actual Bash)
+
+Make it executable:
+bash
+
+chmod +x challenge1.sh
+
+Test it:
+bash
+
+# Test 1: No environment variables
+unset USER_NAME
+unset GREETING_FILE
+./challenge1.sh
+
+# Test 2: With environment variables
+export USER_NAME="Alice Cooper"
+export GREETING_FILE="alice.txt"
+./challenge1.sh
+
+# Test 3: Run multiple times to see appending
+./challenge1.sh
+./challenge1.sh
+tail -3 alice.txt
+
+Show me your actual script when you are done! 🚀
+
+Then I did have a couple of questions:
+
+1.- why do wee need quotes for a variable when inside an if statement but not anywhere else?
+	if [ -z "${variable}" ] as compared to name=${variable}
+	
+2.- Why set date on a variable, only to avoid formatting every time (date %Y-%m-%d %H:%M:%S)?
+	
+
+===== This was my last version of the bash script =====
+
+==================================================================
+==================================================================
+========================= BASH CODE ==============================
+==================================================================
+==================================================================
+
+# 1.- Shebang!
+#!/usr/bin/env bash
+# This script checks for existing environment variables and uses them or creates them to append a greeting line to a .txt file
+
+# 2.- Use -z flag to check if environment variable ${USER_NAME} is empty:
+if [ -z "${USER_NAME}" ]; then
+	read -p "Enter you name(e.g.John Doe): " name
+	export USER_NAME=${name}
+else
+	name=${USER_NAME}
+fi
+	
+# 3.- Use -z flag to check if environment variable ${GREETING_FILE} is empty:
+if [ -z "${GREETING_FILE}" ]; then
+	filename="greeting_sh.txt"
+	export GREETING_FILE=${filename}
+else
+	filename=${GREETING_FILE}
+fi
+	
+# 4.- Set a variable for date: 
+current_date=$(date "+%Y-%m-%d %H:%M:%S")
+
+# 5.- Append a greeting string to "filename":
+echo "Hello ${name}, today is ${current_date}. Have a good one!" >> ${filename}
+
+# 6.- Display the last 3 lines of the file (tail command):
+echo "===== Last 3 lines of ${filename} ====="
+tail -3 ${filename}
+

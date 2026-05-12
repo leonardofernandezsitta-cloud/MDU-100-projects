@@ -1,0 +1,45 @@
+Challenge 1: Environment-Aware Greeting
+
+Write a Python script that:
+
+    Reads an environment variable called USER_NAME (if not set, ask the user)
+
+    Reads an environment variable called GREETING_FILE (if not set, use greeting.txt)
+
+    Appends a personalized greeting "Hello USER_NAME, it is DATE" to that file
+
+    Displays the last 3 lines of the file
+
+Requires: Project 1 (print), Project 2 (input, variables), Project 4 (environment variables), Project 5 (file I/O)
+
+Challenge 2: Secure To-Do List with Permissions
+
+Write a Bash script that:
+
+    Creates a to-do list file with name from user input (spaces → underscores)
+
+    Sets permissions of that file to 600 (owner read/write only) using chmod 600
+
+    Appends tasks until user types done
+
+    Displays the file contents with line numbers
+
+    If the file already exists, asks: "Overwrite? (y/n)"
+
+Requires: Project 2 (user input), Project 5 (file I/O, redirections), new: chmod, test -f
+
+Challenge 3: Permission Probability Calculator
+
+Write a Python script that:
+
+    Asks the user for an octal permission (e.g., 640)
+
+    Validates it is three digits (0-7 each)
+
+    Converts it to rwx string (e.g., rw-r-----)
+
+    Calculates the probability that a randomly set permission would have the same owner permissions (first digit)
+
+    Prints: "Owner permission X has probability Y/8"
+
+Requires: Project 3 (math), Project 5 (file permissions logic), Project 2 (input validation)

@@ -1,0 +1,339 @@
+Next: Challenge 3 (Python)
+
+Challenge 3: Permission Probability Calculator
+
+Write a Python script that:
+
+    Asks the user for an octal permission (e.g., 640)
+
+    Validates it is three digits (0-7 each)
+
+    Converts it to rwx string (e.g., rw-r-----)
+
+    Calculates the probability that a randomly set permission would have the same owner permissions (first digit)
+
+    Prints: "Owner permission X has probability Y/8"
+
+Example:
+text
+
+Enter octal permission (3 digits, 0-7 each): 640
+rwx string: rw-r-----
+Owner permission (6) has probability 1/8 (12.5%)
+
+
+=========================================================================================
+=============================== Challenge 3 solutions: ==================================
+=========================================================================================
+
+
+The first thing I had to think about was the math to determine the probability of a random owner permission being the same as an already created file with "x" owner permission.
+
+So I started here:
+
+
+I do have a math question for the next challenge, just so that I can start thinking a little bit about the logic:
+
+there are 3 permissions, read, write and execute, and there are 3 users, root, user and other users, each one must have 3 numbers, each from 0 to 7, that actually means 8 numbers each, 0 representing null or - (r-x, r--, --x, etc). so, to calculate the probability of the owner permission being the same as the ones the file has. 
+
+1.- I should know how many numbers are there on a set of permissions to start with, I then would do:
+
+7*3*3 = 63 or should I do (7*3)³ = 9261
+
+2.- Knowing the previous, would I then say:
+
+1/63 ? or 1/9261? chances of having owner permissions picked randomly being the same as the file?
+
+You are thinking mathematically, and that is exactly right. Let me answer your question clearly so you can start designing Challenge 3.
+Step 1: Understanding the Permission Space
+
+A file permission has three digits (owner, group, others).
+Each digit can be 0 through 7 → 8 possibilities per digit.
+
+Total possible permission combinations:
+text
+
+8 × 8 × 8 = 512
+
+Not 63, not 9261. 512 total possible 3-digit octal permissions.
+Step 2: Owner Permission Alone
+
+The owner permission is just the first digit (0–7) → 8 possibilities.
+
+If you pick a random permission (all 512 equally likely), the probability that the owner digit is a specific value (e.g., 6) is:
+text
+
+1 / 8 = 0.125 = 12.5%
+
+Because there are 8 possible owner digits, and for each owner digit, there are 8 × 8 = 64 combinations for group and others.
+Step 3: Your Question Restated
+
+You asked: "Probability of the owner permission being the same as the ones the file has?"
+
+If the file has owner permission = 6, then the probability that a randomly generated permission also has owner = 6 is:
+text
+
+(Number of permissions with owner = 6) / (Total permissions)
+= 64 / 512
+= 1 / 8
+
+Step 4: Why Your Calculations Were Off
+Your guess	Why it's wrong
+7 × 3 × 3 = 63	You used 7 instead of 8 (permissions go 0–7, that's 8 numbers). You also multiplied by 3 incorrectly.
+(7 × 3)³ = 9261	You cubed the product, which is not how permutations work.
+1/63 or 1/9261	Denominator is wrong. Correct denominator for owner alone is 8, not 63 or 9261.
+Step 5: The Correct Formula for Challenge 3
+
+For a given owner permission O (0–7), the probability that a random permission has the same owner permission is:
+text
+
+P = 1 / 8
+
+No multiplication by group or others. They are irrelevant to the owner digit.
+Step 6: Example Output for Challenge 3
+
+If user enters 640:
+text
+
+Owner permission: 6
+Probability that a random permission has owner = 6: 1/8 (12.5%)
+
+Step 7: What You Need to Implement
+Requirement	How to do it
+Ask for octal permission	input()
+Validate 3 digits, each 0–7	Check length, check each char in "01234567"
+Convert to rwx string	Map each digit to rwx using 4=read, 2=write, 1=execute
+Calculate probability	1 / 8 (as fraction and percentage)
+Print result	Use f-string
+Your Turn
+
+When you come back from work, write pseudo-code for Challenge 3 first. Then code it.
+
+You already understand the math. The coding will be straightforward.
+
+Go to work. Reply when you are back and ready.
+oh, I see, yes, in deed I used 7 instead of 8 although I had already mentioned it should be 8 digits, however, there was another confusion. I was not thinking about 755 or 600, I was thinking about rwx-rwx-rwx, that's why I was thinking about the cube, but thanks to you I came to realize, this configuration is not what you are asking for in the challenge, although, if you think about it, it can be done, since x=1, w=2 and r=4 then rwx-rwx-rwx = 421-421-421 but that would change the probabilities from 8 on each one to 3 on each one, so, anyway, I was thinking about this in the wrong way, now it is very much clearer to me what I have to do, I will go to work and do this when I come back so that we can push to github and continue with the regular projects (project #6)
+
+You are absolutely right to catch that distinction. Let me confirm your insight.
+Two Different Ways to Think About Permissions
+Model	What it represents	Digits per position	Total combinations
+Octal (0-7)	Sum of read(4)+write(2)+execute(1)	8 (0 through 7)	8³ = 512
+rwx triple (r,w,x as separate bits)	Each of read, write, execute is yes/no	2³ = 8 (same as octal)	Same 512
+Your "rwx-rwx-rwx" as 3 separate bits per position	You were thinking each position has 3 independent toggles	2³ = 8 (same!)	Same 512
+
+Your insight about 421-421-421 is interesting but mathematically equivalent to octal.
+Where Your Cube Idea Came From
+
+You were thinking: "Each of the 9 bits (r,w,x for owner, group, others) can be 0 or 1" → 2⁹ = 512. That is correct.
+
+But then you thought: "Each position (owner, group, others) has 3 possibilities (r, w, x)" — that is incorrect because permissions are combinations (rwx = all three, r-x = read and execute, etc.), not single letters.
+
+So your cube was a different (and valid) model, but it leads to the same 512 total. The challenge simplifies to owner digit alone → 8 possibilities → probability 1/8.
+
+
+Then I went ahead and started experimenting with python code, I failed a bunch of times ans stubborn about it until I came up with python code version 1.0 and then tried to make it better on python code version 2.0:
+
+
+
+'''
+===================================================================
+===================================================================
+======================== Python Code 1.0 ==========================
+===================================================================
+===================================================================
+'''
+
+
+# 1.- Shebang:
+	#!/usr/bin/env python3
+	
+	# This script requests user to enter an octal permission number(e.g.755)
+	# and converts it to "rwx", then calculates the probability of owner permission
+	# randomly selected being the same as the user input
+
+# 2.- Import libraries:
+	import sys
+	
+# 3.- Set a dictionary with values for "rwx" and for values 0-7:
+	octal_dict = {
+	0 : "---",
+	1 : "--x",
+	2 : "-w-", 
+	3 : "-wx", 
+	4 : "r--", 
+	5 : "r-x", 
+	6 : "rw-", 
+	7 : "rwx"
+	}
+	
+# 4.- Define range for possible entries:
+	possible_octal_digits = "01234567"
+	
+# 5.- Get octal permission input from user:
+	usr_octal = input("Enter octal permission (3 digits, 0-7 each e.g. 640): ")
+	octal_list = list(usr_octal) # turns input to a list e.g.["7","5","5"]
+	
+# 6.- Validate input is 3 digits long:
+	while True:
+		if len(octal_list) != 3:
+			usr_octal = input("Octal permission should be no more or less that 3 digits, try again: ")
+			octal_list = list(usr_octal)
+			continue
+		else:
+		
+			print("Analyzing your octal permission...")
+			break
+		
+# 7.- Check if input is within range 0-7:
+	while True:	
+		if octal_list[0] not in possible_octal_digits:
+			usr_octal = input("Octal permission should be numbers between 0.7, try again: ")
+			octal_list = list(usr_octal)
+			continue
+		if octal_list[1] not in possible_octal_digits:
+			usr_octal = input("Octal permission should be numbers between 0.7, try again: ")
+			octal_list = list(usr_octal)
+			continue
+		if octal_list[2] not in possible_octal_digits:
+			usr_octal = input("Octal permission should be numbers between 0.7, try again: ")
+			octal_list = list(usr_octal)
+			continue
+		if len(octal_list) != 3:
+			usr_octal = input("You must be stupid or something, can't you type 3 fucking digits from 0 to 7?: ")
+			octal_list = list(usr_octal)
+			continue
+		else:
+			print("Analyzing your Octal Permission...")
+			break
+			
+# 8.- Convert user input into "rwx":
+	owner_octal = int(octal_list[0])
+	user_octal = int(octal_list[1])
+	other_octal = int(octal_list[2])
+	
+	owner_str = octal_dict[owner_octal]
+	user_str = octal_dict[user_octal]
+	other_str = octal_dict[other_octal]
+	print(f"Your octal permission {usr_octal} converted to 'rwx' is: owner_str+user_str+other_str")
+		
+# 9.- Calculate the probability that a randomly set permission would have the same owner permissions (first digit)
+	# x = amount of possible octal numbers to choose (0-7 = 8)
+	# y = 1 because out of all 8 digits for owner permissions only 1 can be used
+	x = 8
+	y = 1
+	probability = "probability = y/x = 1/8."
+	print(probability)
+	
+# 10.- Exit the script/program:
+	exit()
+
+
+
+'''
+===================================================================
+===================================================================
+======================== Python Code 2.0 ==========================
+===================================================================
+===================================================================
+'''
+
+
+# 1.- Program Set Up:
+
+#!/usr/bin/env python3
+
+import sys
+
+# 2.- Data Set Up:
+
+octal_dict = {
+	0 : "---",
+	1 : "--x",
+	2 : "-w-", 
+	3 : "-wx", 
+	4 : "r--", 
+	5 : "r-x", 
+	6 : "rw-", 
+	7 : "rwx"
+	}
+	
+oct_val_lst=[]
+for i in range(0, 8):
+	oct_val_lst.append(str(i))
+	
+# 3.- Get octal permission from user:
+
+usr_input=list(input("Enter an octal permission (e.g. 750): "))
+
+# 4.- Validate/Show user input:
+
+while True:
+	if len(usr_input) != 3:
+		usr_input=list(input("Octal permission has to be no more or less than 3 digits from 0 to 7, try again: "))
+		continue
+	if usr_input[0] not in oct_val_lst: 
+		usr_input=list(input("Octal permission has to be no more or less than 3 digits from 0 to 7, try again: "))
+		continue
+	if usr_input[1] not in oct_val_lst:
+		usr_input=list(input("Octal permission has to be no more or less than 3 digits from 0 to 7, try again: "))
+		continue
+	if usr_input[2] not in oct_val_lst:
+		usr_input=list(input("Octal permission has to be no more or less than 3 digits from 0 to 7, try again: "))
+		continue
+	else:
+		print("\n")
+		break
+
+
+# 5.- Print results from user input
+
+while True:    
+	if len(usr_input) == 3:
+		print(f'The length of octal permission "{usr_input}" is "{len(usr_input)}".\n')
+		break
+	if usr_input[0] in oct_val_lst:
+		owner=usr_input[0]
+		print(f'Owner permission "{owner}" is valid and found in range "{oct_val_lst}".\n')
+		break
+	if usr_input[1] in oct_val_lst:
+		user=usr_input[1]
+		print(f'User permission "{user}" is valid and found in range "{oct_val_lst}".\n')
+		break
+	if usr_input[2] in oct_val_lst:
+		others=usr_input[2]
+		print(f'Others permission "{others}" is valid and found in range "{oct_val_lst}".\n')
+	else:
+		continue
+
+# 6.- Convert input into "rwx" string.
+
+owner=usr_input[0]
+user=usr_input[1]
+others=usr_input[2]
+rwx = octal_dict[int(owner)] + octal_dict[int(user)] + octal_dict[int(others)]
+
+print(f'Your "rwx" permission is: {rwx}.\n')
+
+# 7.- Calculate the probability that a randomly set permission would have the same owner permissions (first digit)
+
+# x = amount of possible octal numbers to choose (0-7 = 8)
+# y = 1 because out of all 8 digits for owner permissions only 1 can be used
+x = 8
+y = 1
+probability = f'{y/x*100}% or {y}/{x} (one over eight).'
+print(f'The probability of user permission being randomly picked the same as user input is: {probability}\n') 
+
+print(f'Owner permission is: {owner}')
+print(f'User permission is: {user}')
+print(f'Others permission is: {others}')
+print(f'User entered permission: {owner}{user}{others} = {rwx}')
+
+sys.exit(0)
+
+
+
+
+
+
+
+

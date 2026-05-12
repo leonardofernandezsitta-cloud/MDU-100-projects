@@ -1,0 +1,126 @@
+Challenge 1: Environment-Aware Greeting
+
+Write a Python script that:
+
+    Reads an environment variable called USER_NAME (if not set, ask the user)
+
+    Reads an environment variable called GREETING_FILE (if not set, use greeting.txt)
+
+    Appends a personalized greeting "Hello USER_NAME, it is DATE" to that file
+
+    Displays the last 3 lines of the file
+
+Requires: Project 1 (print), Project 2 (input, variables), Project 4 (environment variables), Project 5 (file I/O)
+
+Python:
+
+#!/usr/bin/env python3
+# This script uses environment variables to append a greeting to a text file and to read from the same text file
+
+# 1. Import os and datetime modules
+
+import os
+import datetime
+
+
+# 2. Check if USER_NAME exists in environment:
+#       If yes, get its value and store in a variable called 'name'
+#       If no or empty, ask user "Enter your name:" and store in 'name'
+#       Then set os.environ['USER_NAME'] = name
+
+if  not os.environ.get("USER_NAME"):
+	name = input("Enter your name: ")
+	os.environ["USER_NAME"] = name
+else:
+	name = os.environ.get("USER_NAME")
+	
+	
+# 3. Check if GREETING_FILE exists in environment:
+#       If yes, get its value and store in a variable called 'filename'
+#       If no or empty, ask user "Enter filename:" and store in 'filename'
+#       Then set os.environ['GREETING_FILE'] = filename
+
+if os.environ.get("GREETING_FILE"):
+	filename = os.environ.get("GREETING_FILE")
+else:
+	filename = input("Enter file name: ")
+	os.environ["GREETING_FILE"] = filename
+
+# 4. Create a timestamp using datetime.now()
+#       Format it nicely (e.g., "2026-05-04 15:30:22")
+
+time_stamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+
+# 5. Create the greeting string:
+#       f"Hello {name}, it is {time_stamp}. Have a good one!\n"
+
+greeting = f'Hello {name}, it is {time_stamp}. Have a good one!\n'
+
+
+# 6. Open the file in append mode ('a') using the filename variable
+#       Write the greeting string to the file
+
+with open(filename, 'a') as f:
+	f.write(greeting)
+	
+	
+# 7. Open the same file in read mode ('r')
+#       Read all lines into a list using .readlines()
+#       Get the last 3 lines using slicing: last_lines = all_lines[-3:]
+
+with open(filename, 'r') as f:
+	all_lines = f.readlines()
+	last_lines = all_lines[-3:]
+
+
+# 8. Print a header like "=== Last 3 lines of [filename] ==="
+#       Loop through last_lines and print each one
+
+print(f"=== Last 3 lines of {filename} ===")
+
+for line in last_lines:
+	print(line.strip())   # .strip() removes the \n
+
+
+# 9. (Optional) Print a confirmation message
+
+print("Mission accomplished!")
+
+
+==================================================================
+==================================================================
+========================= BASH CODE ==============================
+==================================================================
+==================================================================
+
+# 1.- Shebang!
+#!/usr/bin/env bash
+# This script checks for existing environment variables and uses them or creates them to append a greeting line to a .txt file
+
+# 2.- Use -z flag to check if environment variable ${USER_NAME} is empty:
+if [ -z "${USER_NAME}" ]; then
+	read -p "Enter you name(e.g.John Doe): " name
+	export USER_NAME=${name}
+else
+	name=${USER_NAME}
+fi
+	
+# 3.- Use -z flag to check if environment variable ${GREETING_FILE} is empty:
+if [ -z "${GREETING_FILE}" ]; then
+	filename="greeting_sh.txt"
+	export GREETING_FILE=${filename}
+else
+	filename=${GREETING_FILE}
+fi
+	
+# 4.- Set a variable for date: 
+current_date=$(date "+%Y-%m-%d %H:%M:%S")
+
+# 5.- Append a greeting string to "filename":
+echo "Hello ${name}, today is ${current_date}. Have a good one!" >> ${filename}
+
+# 6.- Display the last 3 lines of the file (tail command):
+echo "===== Last 3 lines of ${filename} ====="
+tail -3 ${filename}
+

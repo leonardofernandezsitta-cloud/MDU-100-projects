@@ -1,0 +1,100 @@
+Challenge 2: Secure To-Do List with Permissions
+
+Write a Bash script that:
+
+    Creates a to-do list file with name from user input (spaces → underscores)
+
+    Sets permissions of that file to 600 (owner read/write only) using chmod 600
+
+    Appends tasks until user types done
+
+    Displays the file contents with line numbers
+
+    If the file already exists, asks: "Overwrite? (y/n)"
+
+Requires: Project 2 (user input), Project 5 (file I/O, redirections), new: chmod, test -f
+
+
+============ Bash Pseudo-code ============
+
+1.- Indicate where to find bash to run program #!/usr/bin/env bash
+2.- Print a start message --> echo "===== Creating to do list... ====="
+3.- Get file name from user --> read -p "Enter your to do list's name: " list_name
+4.- Replace spaces with underscores and add .txt to file name --> filename="${list_name// /_}.txt"
+5.- Check if file exists, if (yes) ask overwrite, if (no) continue.
+	if [ -f "${filename}" ]; then
+		read -p "${filename} already exists, overwrite? (y/n)" overwrite
+		if [ ${overwrite} == "n" ]; then
+			echo "===== No changes made to ${filename} ====="
+			exit
+		elif [ ${overwrite} == "y" ]; then
+			> "$filename"  # File in being created after user said yes to overwrite.
+6.- chmod 600 ${filename}
+7.- Start a loop to append tasks to file
+	while true; do
+		read -p "Enter new task (type 'done' to finish): " task
+		if [ "$task" = "done" ]; then
+			echo "===== Changes saved to $filename ====="
+			break
+		fi
+		echo "$task" >> "$filename"
+	done
+8.- Print to terminal from filename and enumerate lines
+    nl ${filename}	
+9.- exit
+
+
+
+====================================================================
+====================================================================
+======================== Python Pseudo-Code ========================
+====================================================================
+====================================================================
+
+
+1.- Shebang!:
+	#!/usr/bin/env python3
+	# This script creates a file with the name provided by the user, adds tasks, ends file when user types done + Enter
+	
+2.- Import os and sys:
+	import os
+	import sys
+	
+3.- Creates a to-do list file with name from user input (spaces → underscores) 
+	print(===== Creating your to do list... =====)
+	filename = input("Enter your list's name: ")
+	filename = filename.replace(" ", "_") + ".txt"
+	if os.path.exists(filename):
+		yes_no = input(f"{filename} already exists, do you want to overwrite {filename}(y/n)? ")
+		if yes_no == "y":
+			with open(filename, 'w') as f:
+				pass	# Pass creates empty files. When passing on f.write() we make sure the file is empty
+		elif yes_no == "n":
+			print(f"No changes made to {filename}.")
+			sys.exit(0)
+		else:
+			sys.exit(1) # Error message embedded on exit(1) - "1" == sys.error 
+
+4.- Sets permissions of that file to 600 (owner read/write only) using os.chmod(0o) 600:
+	os.chmod(filename, 0o600)
+
+5.- Appends tasks until user types done:
+	while True:
+		task = input(f"Enter a task or type done to save list to {filename}: ")
+		if task == "done":
+			break
+		else:
+			with open(filename, 'a') as f:
+				f.write(task + "\n")
+			
+6.- Displays the file contents with line enumeration:
+	print(f"======= Your to do list: {filename}. =======")
+	with open(filename, 'r') as f:
+		lines = f.readlines()
+		for i, line in enumerate(lines, start=1):
+			print(f"{i}. {line.strip()}")
+
+7.- Exit the program:
+	sys.exit(0)
+	
+

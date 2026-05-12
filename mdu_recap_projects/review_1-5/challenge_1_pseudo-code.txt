@@ -1,0 +1,72 @@
+Challenge 1: Environment-Aware Greeting
+
+Write a Python script that:
+
+    Reads an environment variable called USER_NAME (if not set, ask the user)
+
+    Reads an environment variable called GREETING_FILE (if not set, use greeting.txt)
+
+    Appends a personalized greeting "Hello USER_NAME, it is DATE" to that file
+
+    Displays the last 3 lines of the file
+
+Requires: Project 1 (print), Project 2 (input, variables), Project 4 (environment variables), Project 5 (file I/O)
+
+=== PYTHON PSEUDO-CODE FOR CHALLENGE 1 ===
+
+1. Import os and datetime modules
+
+2. Check if USER_NAME exists in environment:
+      If yes, get its value and store in a variable called 'name'
+      If no or empty, ask user "Enter your name:" and store in 'name'
+      Then set os.environ['USER_NAME'] = name
+
+3. Check if GREETING_FILE exists in environment:
+      If yes, get its value and store in a variable called 'filename'
+      If no or empty, ask user "Enter filename:" and store in 'filename'
+      Then set os.environ['GREETING_FILE'] = filename
+
+4. Create a timestamp using datetime.now()
+      Format it nicely (e.g., "2026-05-04 15:30:22")
+
+5. Create the greeting string:
+      f"Hello {name}, it is {timestamp}. Have a good one!\n"
+
+6. Open the file in append mode ('a') using the filename variable
+      Write the greeting string to the file
+
+7. Open the same file in read mode ('r')
+      Read all lines into a list using .readlines()
+      Get the last 3 lines using slicing: last_lines = all_lines[-3:]
+
+8. Print a header like "=== Last 3 lines of [filename] ==="
+      Loop through last_lines and print each one
+
+9. (Optional) Print a confirmation message
+
+
+
+====== BASH PSEUDO-CODE FOR CHALLENGE 1 =====
+
+1.- Indicate system where to find bash to run script <> #!/usr/bin/env bash
+2.- Check if environment variable ${USER_NAME} exists, if not, ask user:
+	if [ -z "${USER_NAME}" ]; then
+		read -p "Enter your name(e.g.John Doe): " name
+		export USER_NAME=${name}
+	else
+		name="${USER_NAME}"
+	fi
+3.- Check if environment variable ${GREETING_FILE} exists, if not, ask user:
+	if [ -z "${GREETING_FILE}" ]; then
+		filename="greeting.txt"
+		export GREETING_FILE=${filename}
+	else
+		filename=${GREETING_FILE}
+	fi
+4.- Set date variable:
+	current_date=$(date "%Y-%m-%d %H:%M:%S")
+5.- Append a personalized greeting "Hello USER_NAME, it is DATE" to that file
+	echo "Hello ${name}, today is ${current_date}. Have a good one!" >> ${filename}
+6.- Display the last 3 lines of the file
+	tail -3 greeting.txt
+		
