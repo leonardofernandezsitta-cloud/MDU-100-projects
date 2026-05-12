@@ -9,15 +9,17 @@
 |--------|---------|----------|
 | `mdu_project_1_hello_world/` | Hello World | Terminal, ASCII, system calls |
 | `mdu_project_2_greeting/` | Greeting | User input, variables, string concatenation |
-| `mdu_project_3_calculator/` | Calculator | Integers, floats, division, bc |
+| `mdu_project_3_calculator/` | Calculator | Integers, floats, division, bc, f-strings |
 | `mdu_project_4_environment_variables/` | Environment Variables | export, ps auxe, security |
+| `mdu_project_5_file_io/` | File I/O | read/write/append, file modes, `with open` |
+| `mdu_recap_projects/review_1_5/` | Review 1-5 | Three challenges combining Projects 1-5 |
 
 More projects will be added as I progress.
 
 ## Technologies Used
 
 - **Python 3** (primary for learning)
-- **Bash** (terminal automation)
+- **Bash** (terminal automation and scripting)
 - JavaScript and C++ will be added in later phases
 
 ## How to Run Any Project
@@ -49,18 +51,62 @@ Progress Tracker
 2	Greeting	✅	User input, variables, string concatenation
 3	Calculator	✅	int/float, division, bc, f-strings
 4	Environment Variables	✅	export, ps auxe, security
-5-100	...	🔴	In progress
+5	File I/O	✅	File modes, append vs write, with open
+Review	Challenges 1-5	✅	Environment-aware greeting, secure to-do list, permission probability
+6-100	...	🔴	In progress
 What I Learned So Far
 
-    The difference between shell variables and environment variables
+Programming Concepts:
 
-    Why export is needed for child processes
+    Variables, data types, user input, and output in Python and Bash
 
-    Why storing secrets in environment variables is insecure (ps auxe reveals them)
+    String concatenation and f-string formatting
 
-    Basic probability and counting
+    Type conversion (int(), float(), str())
 
-    How to navigate the Linux terminal confidently
+    Conditional statements (if/elif/else) and loops (while, for)
+
+    Functions and methods
+
+File I/O:
+
+    Reading, writing, and appending to files
+
+    File modes: 'r', 'w', 'a'
+
+    with open() for automatic file closing
+
+Environment & System:
+
+    Shell vs environment variables (difference and inheritance)
+
+    export for making variables available to child processes
+
+    ps auxe reveals environment variables → insecure for secrets
+
+Security & Permissions:
+
+    File permissions: 600 (owner read/write only), 755 (owner all, group/others read+execute)
+
+    chmod for changing permissions
+
+    Why environment variables are not secure for passwords or API keys
+
+Mathematics:
+
+    Counting combinations (e.g., environment variable names)
+
+    Probability calculations (1/8 for owner digit, 1/512 for exact permission)
+
+    Octal to rwx conversion
+
+Terminal & Git:
+
+    Basic commands: cd, ls, pwd, nano, cat, chmod
+
+    Git workflow: add, commit, push
+
+    GitHub for version control and portfolio
 
 License
 
@@ -68,34 +114,3 @@ MIT — free for learning purposes.
 Disclaimer
 
 All code is for educational use. No real secrets or passwords are stored here.
-text
-
-
-Save (`Ctrl+X`, `Y`, `Enter`).
-
----
-
-## Verify the file is complete
-
-```bash
-wc -l README.md
-
-You should see around 70-80 lines. If you see only 10-15 lines, you did not paste the entire file.
-
-Also check the end:
-bash
-
-tail -5 README.md
-
-You should see:
-text
-
-## License
-
-MIT — free for learning purposes.
-
-## Disclaimer
-
-All code is for educational use. No real secrets or passwords are stored here.
-
-
